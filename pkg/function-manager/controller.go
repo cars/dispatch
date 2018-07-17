@@ -206,8 +206,6 @@ func (h *runEntityHandler) Add(ctx context.Context, obj entitystore.Entity) (err
 	span, ctx := trace.Trace(ctx, "")
 	defer span.Finish()
 
-	log.Infof("Starting run for %v", obj.GetName())
-
 	run := obj.(*functions.FnRun)
 	defer run.Done()
 
@@ -233,8 +231,6 @@ func (h *runEntityHandler) Add(ctx context.Context, obj entitystore.Entity) (err
 
 	fctx[functions.TimeoutKey] = f.Timeout
 
-	log.Infof("Sending run info to runner")
-
 	output, err := h.Runner.Run(&functions.FunctionExecution{
 		Context:        fctx,
 		OrganizationID: run.OrganizationID,
@@ -249,8 +245,6 @@ func (h *runEntityHandler) Add(ctx context.Context, obj entitystore.Entity) (err
 		Secrets:  run.Secrets,
 		Services: run.Services,
 	}, run.Input)
-
-	log.Infof("Received results of runner: \n\t Output: %v \n\t Err: %v", output, err)
 
 	logs := fctx.Logs()
 	run.Logs = &logs
@@ -287,8 +281,6 @@ func (h *runEntityHandler) Add(ctx context.Context, obj entitystore.Entity) (err
 
 	run.Status = entitystore.StatusREADY
 	run.FinishedTime = time.Now()
-	log.Infof("Finished run %v", obj.GetName())
-
 	return
 }
 
