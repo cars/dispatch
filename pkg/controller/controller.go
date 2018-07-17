@@ -17,6 +17,7 @@ import (
 
 	"github.com/vmware/dispatch/pkg/entity-store"
 	"github.com/vmware/dispatch/pkg/trace"
+	"github.com/vmware/dispatch/pkg/zookeeper"
 )
 
 // EntityHandler define an interface for entity operations of a generic controller
@@ -237,20 +238,20 @@ func (dc *DefaultController) run(stopChan <-chan bool) {
 	defer close(dc.watcher)
 
 	// Connect to zookeeper and create some baselines
-	log.Infof("Trying to connect to zookeeper at location %v", dc.options.ZookeeperLocation)
-	client, err := ZKConnect(dc.options.ZookeeperLocation)
+	driver, err := zookeeper.NewDriver(dc.options.ZookeeperLocation)
 	if err != nil {
-		log.Fatalf("Unable to connect to zookeeper")
+		log.Fatalf("%v", err)
 	}
-	defer client.Close()
-	if err = CreateZnode(client, "/entities"); err != nil {
-		log.Warnf("Unable to create overarching znode %v", err)
+	defer driver.Close()
+
+	if err = driver.CreateNode("/entities", []byte{}); err != nil {
+		log.Fatalf("Unable to create overarching znode %v", err)
 	}
 	// Start a worker pool.  The pool scales up to dc.options.Workers.
 	go func() {
 		sem := semaphore.NewWeighted(int64(dc.options.Workers))
 		for watchEvent := range dc.watcher {
-			lock := NewZKLock(watchEvent.Entity.GetName(), client)
+			lock := driver.GetLock(watchEvent.Entity.GetName())
 			lock.Lock()
 			if !lock.Locked {
 				log.Infof("Failed to acquire lock for %v", watchEvent.Entity.GetName())
