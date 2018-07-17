@@ -663,6 +663,12 @@
   revision = "8732c616f52954686704c8645fe1a9d59e9df7c1"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/samuel/go-zookeeper"
+  packages = ["zk"]
+  revision = "c4fab1ac1bec58281ad0667dc3f0907a9476ac47"
+
+[[projects]]
   name = "github.com/satori/go.uuid"
   packages = ["."]
   revision = "879c5887cd475cd7864858769793b2ceb0d44feb"
@@ -775,29 +781,6 @@
   packages = ["metrics"]
   revision = "4267858c0679cd4e47cefed8d7f70fd386cfb567"
   version = "v1.4.0"
-
-[[projects]]
-  name = "github.com/vmware/govmomi"
-  packages = [
-    ".",
-    "event",
-    "nfc",
-    "object",
-    "property",
-    "session",
-    "task",
-    "view",
-    "vim25",
-    "vim25/debug",
-    "vim25/methods",
-    "vim25/mo",
-    "vim25/progress",
-    "vim25/soap",
-    "vim25/types",
-    "vim25/xml"
-  ]
-  revision = "7d879bac14d09f2f2a45a0477c1e45fbf52240f5"
-  version = "v0.16.0"
 
 [[projects]]
   branch = "master"
@@ -1083,6 +1066,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "965ae015fbef525a2bbf4f458ecd46883a97f71dac47aa1e90e84cf11ef7f88b"
+  inputs-digest = "d539b9d5cc2e80bbd15e9b3ae92dd505d7ee1f5dab4ae5627bfdf3bd96efaaf1"
   solver-name = "gps-cdcl"
   solver-version = 1
